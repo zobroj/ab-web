@@ -33,7 +33,7 @@ import {
   makeWhosTurnSelector,
 } from '../Table/selectors';
 
-import SeatComponent from '../../components/Seat2';
+import SeatComponent from '../../components/Seat';
 
 class Seat extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 

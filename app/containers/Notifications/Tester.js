@@ -1,4 +1,6 @@
 import React from 'react';
+import uuid from 'uuid';
+import remove from 'lodash/remove';
 import Notifications from '../../components/Notifications';
 import { TEMP, PERSIST } from './constants';
 
@@ -7,6 +9,7 @@ const styles = {
   backgroundColor: 'green',
   color: 'white',
   marginTop: 100,
+  zIndex: 100,
 };
 
 /*
@@ -80,7 +83,7 @@ const mockNotifications = [
 
 const temp = {
   notifyType: 'FUNDS_TRANSFERRED_NTZ',
-  txId: 7,
+  txId: uuid(),
   category: 'NTZ Wallet',
   details: 'Sent 1,000 NTZ to 0x2381...3290',
   dismissable: true,
@@ -89,7 +92,7 @@ const temp = {
 
 const persist = {
   notifyType: 'TABLE_JOINING',
-  txId: 3,
+  txId: uuid(),
   category: 'Joining Table',
   details: '0xdsaifoj...dskafj',
   dismissable: false,
@@ -115,9 +118,9 @@ class Tester extends React.Component {
     }
     return null;
   }
-  removeNotification() {
+  removeNotification(txId) {
     const { notifications } = this.state;
-    notifications.pop();
+    remove(notifications, (note) => note.txId === txId);
     this.setState({ notifications });
   }
   render() {
@@ -146,10 +149,15 @@ class Tester extends React.Component {
 
         {/* only add this to container */}
         {notifications.length !== 0 && notifications.map(
-          (item, i) =>
-            <Notifications key={i} {...item} {...this.props} />
+          (item, i) => (
+            <Notifications
+              removeNotification={this.removeNotification}
+              key={i}
+              {...item}
+              {...this.props}
+            />
           )
-        }
+        )}
       </div>
     );
   }

@@ -4,16 +4,17 @@
 import styled from 'styled-components';
 
 // colors
-const successBg = 'linear-gradient(0deg, #B4ED50 0%, #78D049 100%)';
-const infoBg = 'linear-gradient(0deg, #D4D4D4 0%, #4D4D4D 100%)';
-const infoReverseBg = 'linear-gradient(0deg, #4D4D4D 0%, #D4D4D4 100%)';
-const warningBg = 'linear-gradient(0deg, #F7F8CB 0%, #F7F51C 100%)';
-const dangerBg = 'linear-gradient(0deg, #FBDA61 0%, #F76B1C 100%)';
-const activeColor = '#35C5E3'; // tealish
-const successColor = '#305209'; // greenish
-const infoColor = 'white'; // white
-const warningColor = '#5E5F3B'; // yellowish
-const dangerColor = '#63430F';  // orangish
+import {
+  infoReverseBg,
+  activeColor,
+  infoColor,
+} from '../../variables';
+
+import {
+  alertBg,
+  alertColor,
+} from '../../utils/styleUtils';
+
 // shadows
 const smallShadow = '0 1px 4px 0 rgba(0,0,0,0.50)';
 const medShadow = '0 2px 4px 0 rgba(0,0,0,0.50)';
@@ -192,21 +193,8 @@ export const StatusActionStyle = styled(SharedLower)`
     (props) => (props.type === 'info') ? fontWeightInfo : fontWeigthBold
   };
   font-size: ${scaleSeat(11)};
-
-  color: ${(props) => {
-    if (props.type === 'success') return successColor;
-    if (props.type === 'info') return 'black';
-    if (props.type === 'warning') return warningColor;
-    if (props.type === 'danger') return dangerColor;
-    return infoColor;
-  }};
-  background: ${(props) => {
-    if (props.type === 'success') return successBg;
-    if (props.type === 'info') return 'white';
-    if (props.type === 'warning') return warningBg;
-    if (props.type === 'danger') return dangerBg;
-    return infoBg;
-  }};
+  color: ${(props) => alertColor(props.type)};
+  background: ${(props) => alertBg(props.type, 'solid')};
   opacity: ${(props) => props.recent ? 1 : 0.4};
 `;
 
@@ -259,13 +247,7 @@ export const TimerBar = styled.div`
   left: 0px;
   width: ${(props) => props.width};
   border-radius: 0 0 ${scaleSeat(2)} ${scaleSeat(2)};
-  background: ${(props) => {
-    if (props.type === 'sitout') return 'white';
-    if (props.type === 'active') return activeColor;
-    if (props.type === 'warning') return warningBg;
-    if (props.type === 'danger') return dangerBg;
-    return infoBg;
-  }};
+  background: ${(props) => alertBg(props.type, 'gradient')};
 `;
 
 // ButtonJoin

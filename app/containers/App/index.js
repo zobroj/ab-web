@@ -8,6 +8,7 @@ import Footer from 'components/Footer';
 import Content from 'components/Content';
 import withProgressBar from 'components/ProgressBar';
 import Header from '../Header';
+import Notifications from '../../containers/Notifications';
 
 import {
   makeSelectProgress,
@@ -50,24 +51,28 @@ const StyledDashboard = styled.div`
 
 export function App(props) {
   const modalContent = props.modalStack[props.modalStack.length - 1];
+  const isNotTable = props.location.pathname.indexOf('table') === -1;
   return (
     <div name="app-container">
       <StyledDashboard params={props.params} name="styled-dashboard">
-        { props.location.pathname.indexOf('table') === -1 &&
+        {isNotTable &&
           <Header
             onClickLogout={props.handleClickLogout}
             {...props}
           />
         }
-        <Content
-          fixed={props.fixed}
-          name="content-wrapper"
-        >
-          {React.Children.toArray(props.children)}
-        </Content>
+        <div>
+          <Notifications isNotTable={isNotTable} />
+          <Content
+            fixed={props.fixed}
+            name="content-wrapper"
+          >
+            {React.Children.toArray(props.children)}
+          </Content>
+        </div>
 
       </StyledDashboard>
-      { props.location.pathname.indexOf('table') === -1 &&
+      {isNotTable &&
         <Footer />
       }
       { modalContent &&

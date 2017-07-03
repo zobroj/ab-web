@@ -1,6 +1,7 @@
 import React from 'react';
 import uuid from 'uuid';
 import remove from 'lodash/remove';
+import sortBy from 'lodash/sortBy';
 import { fromJS } from 'immutable';
 import Notifications from '../../components/Notifications';
 import { TEMP, PERSIST } from './constants';
@@ -89,6 +90,7 @@ const temp = fromJS({
   details: 'Sent 1,000 NTZ to 0x2381...3290',
   removing: false,
   dismissable: true,
+  date: new Date(),
   type: 'success',
 });
 
@@ -99,6 +101,7 @@ const persist = fromJS({
   details: '0xdsaifoj...dskafj',
   removing: false,
   dismissable: false,
+  date: new Date(),
   type: 'danger',
 });
 
@@ -112,15 +115,14 @@ class Tester extends React.Component {
   }
   addNotification(type) {
     const { notifications } = this.state;
-    if (type === PERSIST) {
-      notifications.push(persist.toJS());
-      this.setState({ notifications });
-    }
     if (type === TEMP) {
       notifications.push(temp.toJS());
-      this.setState({ notifications });
     }
-    return null;
+    if (type === PERSIST) {
+      notifications.push(persist.toJS());
+    }
+    const sorted = sortBy(notifications, ['dismissable', 'date']);
+    return this.setState({ notifications: sorted });
   }
   removeNotification(txId) {
     const { notifications } = this.state;
@@ -167,7 +169,7 @@ class Tester extends React.Component {
           style={{ ...styles, backgroundColor: 'red' }}
           onClick={() => this.popNotification('xxxxxx')}
         >
-          pop persist
+          pop
         </button>
 
         {/* only add this to container */}

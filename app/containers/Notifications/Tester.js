@@ -104,6 +104,7 @@ class Tester extends React.Component {
     super(props);
     this.state = { notifications: [] };
     this.addNotification = this.addNotification.bind(this);
+    this.popNotification = this.popNotification.bind(this);
     this.removeNotification = this.removeNotification.bind(this);
   }
   addNotification(type) {
@@ -123,28 +124,33 @@ class Tester extends React.Component {
     remove(notifications, (note) => note.txId === txId);
     this.setState({ notifications });
   }
+  popNotification() {
+    const { notifications } = this.state;
+    notifications.pop();
+    this.setState({ notifications });
+  }
   render() {
     const { notifications } = this.state;
     return (
       <div>
         {/* testing related only */}
         <button
-          style={{ ...styles, left: 80 }}
+          style={{ ...styles, left: 120 }}
           onClick={() => this.addNotification(PERSIST)}
         >
           add persist
         </button>
         <button
-          style={{ ...styles, left: 200 }}
+          style={{ ...styles, left: 220 }}
           onClick={() => this.addNotification(TEMP)}
         >
           add temp
         </button>
         <button
           style={{ ...styles, backgroundColor: 'red' }}
-          onClick={() => this.removeNotification('xxxxxx')}
+          onClick={() => this.popNotification('xxxxxx')}
         >
-          remove
+          pop persist
         </button>
 
         {/* only add this to container */}

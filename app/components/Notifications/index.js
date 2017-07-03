@@ -6,8 +6,8 @@ import {
   Category,
   Container,
   IconWrapper,
-  Details,
   Icon,
+  Details,
   Wrapper,
 } from './styles';
 
@@ -17,7 +17,6 @@ const Notification = ({ category, details, dismissable, isNotTable, type }) => (
       <Category>{category}</Category>
       <Details>{details}</Details>
       <IconWrapper>
-        <Icon className="fa fa-info-circle" />
         {dismissable &&
           <ButtonWrapper>
             <Icon className="fa fa-times" />
@@ -36,10 +35,10 @@ Notification.propTypes = {
 };
 Notification.defaultProps = {
   category: 'Creating Account',
-  details: 'Waiting for transaction confirmation...',
+  details: '',
   dismissable: true,
   isNotTable: false,
-  type: 'info',
+  type: 'danger',
 };
 
 export default Notification;

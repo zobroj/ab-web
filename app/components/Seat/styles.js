@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 // colors
 import {
-  infoReverseBg,
+  infoBgInverse,
   activeColor,
   infoColor,
 } from '../../variables';
@@ -218,7 +218,7 @@ export const StatusSeat = styled.div`
   font-size: ${scaleSeat(11)};
   color: ${infoColor};
 
-  background: ${infoReverseBg};
+  background: ${infoBgInverse};
   box-shadow: ${smallShadow};
   border-radius: ${scaleSeat(3)} ${scaleSeat(3)} 0 0;
 `;

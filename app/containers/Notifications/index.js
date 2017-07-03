@@ -1,6 +1,9 @@
-// import React from 'react';
+import React from 'react';
 // import PropTypes from 'prop-types';
+import Tester from './Tester';
 
-import Notifications from '../../components/Notifications';
+const NotificationsContainer = (props) => (
+  <Tester {...props} />
+);
 
-export default Notifications;
+export default NotificationsContainer;

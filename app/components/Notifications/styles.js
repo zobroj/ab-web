@@ -13,7 +13,8 @@ export const Container = styled.div`
   justify-content: center;
   ${(props) => props.isNotTable ?
     `margin-top: 52px;
-    background-color: ${alertBg(props.type, 'solid')};`
+    background-color: ${alertBg(props.type, 'solid')};
+    position: fixed;`
     :
     `margin-top: 0;
     background-color: none;`
@@ -37,7 +38,6 @@ export const Wrapper = styled.div`
     `border-radius: 0 0 8px 8px;
      margin-left: 24px;
      background-color: ${alertBg(props.type, 'solid')};
-     background-image: ${alertBg(props.type, 'gradient')};
     `
   };
 `;

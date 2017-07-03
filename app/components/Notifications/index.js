@@ -17,10 +17,11 @@ const Notification = ({
   dismissable,
   isNotTable,
   removeNotification,
+  removing,
   type,
   txId,
 }) => (
-  <Container type={type} isNotTable={isNotTable}>
+  <Container removing={removing} type={type} isNotTable={isNotTable}>
     <Wrapper type={type} isNotTable={isNotTable}>
       <Category>{category}</Category>
       <Details>{details}</Details>
@@ -40,6 +41,7 @@ Notification.propTypes = {
   dismissable: PropTypes.bool,
   isNotTable: PropTypes.bool,
   removeNotification: PropTypes.func,
+  removing: PropTypes.bool,
   type: PropTypes.string,
   txId: PropTypes.string,
 };
@@ -49,6 +51,7 @@ Notification.defaultProps = {
   dismissable: true,
   isNotTable: false,
   removeNotification: () => {},
+  removing: false,
   type: 'danger',
   txId: '',
 };

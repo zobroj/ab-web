@@ -1,6 +1,7 @@
 import React from 'react';
 import uuid from 'uuid';
 import remove from 'lodash/remove';
+import { fromJS } from 'immutable';
 import Notifications from '../../components/Notifications';
 import { TEMP, PERSIST } from './constants';
 
@@ -81,23 +82,25 @@ const mockNotifications = [
 ];
 */
 
-const temp = {
+const temp = fromJS({
   notifyType: 'FUNDS_TRANSFERRED_NTZ',
   txId: uuid(),
   category: 'NTZ Wallet',
   details: 'Sent 1,000 NTZ to 0x2381...3290',
+  removing: false,
   dismissable: true,
   type: 'success',
-};
+});
 
-const persist = {
+const persist = fromJS({
   notifyType: 'TABLE_JOINING',
   txId: uuid(),
   category: 'Joining Table',
   details: '0xdsaifoj...dskafj',
+  removing: false,
   dismissable: false,
   type: 'danger',
-};
+});
 
 class Tester extends React.Component {
   constructor(props) {
@@ -110,19 +113,33 @@ class Tester extends React.Component {
   addNotification(type) {
     const { notifications } = this.state;
     if (type === PERSIST) {
-      notifications.push(persist);
+      notifications.push(persist.toJS());
       this.setState({ notifications });
     }
     if (type === TEMP) {
-      notifications.push(temp);
+      notifications.push(temp.toJS());
       this.setState({ notifications });
     }
     return null;
   }
   removeNotification(txId) {
     const { notifications } = this.state;
-    remove(notifications, (note) => note.txId === txId);
+    // trigger remove note animation
+    notifications.map((note) => {
+      if (note.txId === txId) {
+        note.removing = true; // eslint-disable-line no-param-reassign
+        return note;
+      }
+      return note;
+    });
     this.setState({ notifications });
+
+    // remove element after animation finishes
+    const removeNote = () => {
+      remove(notifications, (note) => note.txId === txId);
+      this.setState({ notifications });
+    };
+    setTimeout(removeNote, 500);
   }
   popNotification() {
     const { notifications } = this.state;

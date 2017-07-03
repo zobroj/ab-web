@@ -1,20 +1,30 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 import {
   alertBg,
   alertColor,
 } from '../../utils/styleUtils';
 
+const noteIn = keyframes`
+  from { transform: translateY(-40px) }
+  to {  transform: translateY(0) }
+`;
+const noteOut = keyframes`
+  from { transform: translateY(0) }
+  to {  transform: translateY(-40px) }
+`;
+
 export const Container = styled.div`
   width: 100%;
   height: 36px;
+  position: fixed;
   display: flex;
   align-items: center;
   justify-content: center;
+  animation: ${(props) => props.removing ? noteOut : noteIn} 0.5s ease-in-out;
   ${(props) => props.isNotTable ?
     `margin-top: 52px;
-    background-color: ${alertBg(props.type, 'solid')};
-    position: fixed;`
+    background-color: ${alertBg(props.type, 'solid')};`
     :
     `margin-top: 0;
     background-color: none;`

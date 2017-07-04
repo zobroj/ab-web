@@ -14,7 +14,6 @@ import { loginSaga } from './containers/LoginPage/sagas';
 import { registerSaga } from './containers/RegisterPage/sagas';
 import { generateSaga } from './containers/GeneratePage/sagas';
 import { formActionSaga } from './services/reduxFormSaga';
-import { notificationsSaga } from './containers/Notifications/sagas';
 
 import * as storageService from './services/localStorage';
 
@@ -54,7 +53,6 @@ export default function configureStore(initialState = {}, history) {
     loginSaga,
     generateSaga,
     registerSaga,
-    notificationsSaga,
   );
 
   // Extensions

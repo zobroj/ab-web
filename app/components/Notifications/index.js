@@ -13,6 +13,7 @@ const styles = {
 
 const Tester = (props) => {
   const { notifications } = props;
+  console.log('index', notifications);
   return (
     <div>
       {/* testing related only */}
@@ -41,7 +42,7 @@ const Tester = (props) => {
           <Notifications
             key={i}
             {...item}
-            {...this.props}
+            {...props}
           />
         )
       )}

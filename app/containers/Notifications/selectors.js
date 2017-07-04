@@ -3,5 +3,12 @@ import sortBy from 'lodash/sortBy';
 
 export const selectNotifications = () => createSelector(
   (state) => state.get('notifications'),
-  (notifications) => sortBy(notifications, ['dismissable', 'date']),
+  (notifications) => {
+    const collection = notifications.toJS();
+    if (collection.length > 1) {
+      console.log('sorting');
+      sortBy(collection, ['dismissable', 'date']);
+    }
+    return collection;
+  }
 );

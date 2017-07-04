@@ -1,18 +1,16 @@
-// import { List, fromJS } from 'immutable';
+import { List, fromJS } from 'immutable';
 import remove from 'lodash/remove';
 import * as types from './actions';
 
-
-export const initialState = [];
+export const initialState = List([]);
 
 export default function notificationsReducer(state = initialState, action) {
   switch (action.type) {
 
     case types.NOTIFY_ADD: {
-      console.log('add');
-      const notifications = state;
-      notifications.push(action.notification);
-      return notifications;
+      const notification = fromJS(action.notification);
+      const newState = state.push(notification);
+      return newState;
     }
 
     case types.NOTIFY_DELETE: {

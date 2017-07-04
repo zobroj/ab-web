@@ -1,58 +1,56 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Notifications from './Notification';
+import { TEMP, PERSIST } from '../../containers/Notifications/constants';
 
-import {
-  ButtonWrapper,
-  Category,
-  Container,
-  IconWrapper,
-  Icon,
-  Details,
-  Wrapper,
-} from './styles';
-
-const Notification = ({
-  category,
-  details,
-  dismissable,
-  isNotTable,
-  removeNotification,
-  removing,
-  type,
-  txId,
-}) => (
-  <Container removing={removing} type={type} isNotTable={isNotTable}>
-    <Wrapper type={type} isNotTable={isNotTable}>
-      <Category>{category}</Category>
-      <Details>{details}</Details>
-      <IconWrapper>
-        {dismissable &&
-          <ButtonWrapper onClick={() => removeNotification(txId)}>
-            <Icon className="fa fa-times" />
-          </ButtonWrapper>
-        }
-      </IconWrapper>
-    </Wrapper>
-  </Container>
-);
-Notification.propTypes = {
-  category: PropTypes.string,
-  details: PropTypes.string,
-  dismissable: PropTypes.bool,
-  isNotTable: PropTypes.bool,
-  removeNotification: PropTypes.func.isRequired,
-  removing: PropTypes.bool,
-  type: PropTypes.string,
-  txId: PropTypes.string,
-};
-Notification.defaultProps = {
-  category: 'Creating Account',
-  details: '',
-  dismissable: true,
-  isNotTable: false,
-  removing: false,
-  type: 'danger',
-  txId: '',
+const styles = {
+  position: 'absolute',
+  backgroundColor: 'green',
+  color: 'white',
+  marginTop: 100,
+  zIndex: 100,
 };
 
-export default Notification;
+const Tester = (props) => {
+  const { notifications } = props;
+  return (
+    <div>
+      {/* testing related only */}
+      <button
+        style={{ ...styles, left: 120 }}
+        onClick={() => props.notifyCreate(PERSIST)}
+      >
+        add persist
+      </button>
+      <button
+        style={{ ...styles, left: 220 }}
+        onClick={() => props.notifyCreate(TEMP)}
+      >
+        add temp
+      </button>
+      {/* <button
+        style={{ ...styles, backgroundColor: 'red' }}
+        onClick={() => this.popNotification('xxxxxx')}
+      >
+        pop
+      </button> */}
+
+      {/* only add this to container */}
+      {notifications.length !== 0 && notifications.map(
+        (item, i) => (
+          <Notifications
+            key={i}
+            {...item}
+            {...this.props}
+          />
+        )
+      )}
+    </div>
+  );
+};
+Tester.propTypes = {
+  notifyCreate: PropTypes.func,
+  notifications: PropTypes.array,
+};
+
+export default Tester;

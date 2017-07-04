@@ -43,6 +43,8 @@ function* createNotification(action) {
   if (action.notifyType === TEMP) {
     temp.txId = newUuid;
     yield put(notifyAdd(temp));
+    yield call(delay, 3000);
+    yield* removeNotification({ txId: newUuid });
   } else {
     // if persist
     persist.txId = newUuid;

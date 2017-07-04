@@ -1,15 +1,17 @@
-import { put, takeEvery } from 'redux-saga/effects';
-import uuid from 'uuid';
+import { call, put, takeEvery } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
+import uuid from 'uuid/v4';
 import {
   NOTIFY_CREATE,
-  // NOTIFY_REMOVE,
+  NOTIFY_REMOVE,
   notifyAdd,
+  notifyDelete,
+  notifyRemoving,
 } from './actions';
 import { TEMP } from './constants';
 
 const temp = {
   notifyType: 'FUNDS_TRANSFERRED_NTZ',
-  txId: uuid(),
   category: 'NTZ Wallet',
   details: 'Sent 1,000 NTZ to 0x2381...3290',
   removing: false,
@@ -20,7 +22,6 @@ const temp = {
 
 const persist = {
   notifyType: 'TABLE_JOINING',
-  txId: uuid(),
   category: 'Joining Table',
   details: '0xdsaifoj...dskafj',
   removing: false,
@@ -29,41 +30,29 @@ const persist = {
   type: 'danger',
 };
 
-/*
-export function* removeNotification(txId) {
+function* removeNotification(action) {
   // trigger remove note animation
-  notifications.map((note) => {
-    if (note.txId === txId) {
-      note.removing = true; // eslint-disable-line no-param-reassign
-      return note;
-    }
-    return note;
-  });
-  this.setState({ notifications });
-  */
-
+  yield put(notifyRemoving(action.txId));
   // remove element after animation finishes
-  /*
-  const removeNote = () => {
-    remove(notifications, (note) => note.txId === action.txId);
-    return notifications;
-  };
-  setTimeout(removeNote, 500);
+  yield call(delay, 400);
+  yield put(notifyDelete(action.txId));
 }
-*/
 
-export function* createNotification(action) {
-  console.log('yo');
+function* createNotification(action) {
+  const newUuid = uuid();
   if (action.notifyType === TEMP) {
+    temp.txId = newUuid;
     yield put(notifyAdd(temp));
   } else {
     // if persist
+    persist.txId = newUuid;
     yield put(notifyAdd(persist));
   }
 }
 
 export function* notificationsSaga() {
   yield takeEvery(NOTIFY_CREATE, createNotification);
+  yield takeEvery(NOTIFY_REMOVE, removeNotification);
 }
 
 export default [

@@ -1,5 +1,4 @@
-import { List, fromJS } from 'immutable';
-import remove from 'lodash/remove';
+import { List, Map } from 'immutable';
 import * as types from './actions';
 
 export const initialState = List([]);
@@ -8,19 +7,27 @@ export default function notificationsReducer(state = initialState, action) {
   switch (action.type) {
 
     case types.NOTIFY_ADD: {
-      const notification = fromJS(action.notification);
+      const notification = Map(action.notification);
       const newState = state.push(notification);
       return newState;
     }
 
     case types.NOTIFY_DELETE: {
-      const notifications = state.toJS();
-      remove(notifications, (note) => note.txId === action.txId);
-      return notifications;
+      const newState = state
+        .filter((note) => note.get('txId') !== action.txId);
+      return newState;
     }
-    /*
-    case types.NOTIFY_UPDATE: {}
-    */
+
+    case types.NOTIFY_REMOVING: {
+      const newState = state
+        .map((note) => {
+          if (note.get('txId') === action.txId) {
+            return note.set('removing', true);
+          }
+          return note;
+        });
+      return newState;
+    }
 
     default: {
       return state;

@@ -1,12 +1,22 @@
 import styled, { keyframes } from 'styled-components';
 
-import { curtainStickyWidth } from '../../variables';
+import BaseLink from '../Link';
+
+import {
+  activeColor,
+  curtainStickyWidth,
+} from '../../variables';
 
 import {
   alertBg,
   alertColor,
   Button,
 } from '../../utils/styleUtils';
+
+export const Link = styled(BaseLink)`
+  text-decoration: none;
+  color: ${activeColor};
+`;
 
 const noteIn = keyframes`
   from { transform: translateY(-40px) }

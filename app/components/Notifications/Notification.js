@@ -46,7 +46,10 @@ const Notification = ({
 );
 Notification.propTypes = {
   category: PropTypes.string,
-  details: PropTypes.string,
+  details: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.node,
+  ]),
   dismissable: PropTypes.bool,
   isNotTable: PropTypes.bool,
   notifyRemove: PropTypes.func,

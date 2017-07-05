@@ -1,7 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Notification from './Notification';
-import { notLoggedIn } from '../../containers/Notifications/constants';
+import { Link } from './styles';
+
+const notLoggedIn = {
+  txId: 'AUTH_NOT_LOGGED_IN',
+  notifyType: 'AUTH_NOT_LOGGED_IN',
+  category: 'Visitor Mode',
+  details: <span>Please <Link to="login">login</Link> or <Link to="register">signup</Link> to join a game.</span>,
+  removing: false,
+  dismissable: false,
+  date: new Date(),
+  type: 'info',
+};
 
 const Tester = (props) => {
   const { notifications, loggedIn } = props;

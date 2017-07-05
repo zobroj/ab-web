@@ -21,14 +21,23 @@ const Notification = ({
   type,
   txId,
 }) => (
-  <Container removing={removing} type={type} isNotTable={isNotTable}>
+  <Container
+    name="notification-container"
+    removing={removing}
+    type={type}
+    isNotTable={isNotTable}
+  >
     <Wrapper type={type} isNotTable={isNotTable}>
       <Category>{category}</Category>
       <Details>{details}</Details>
       <IconWrapper>
-        {dismissable &&
+        {dismissable ?
           <ButtonWrapper onClick={() => notifyRemove(txId)}>
             <Icon className="fa fa-times" />
+          </ButtonWrapper>
+          :
+          <ButtonWrapper onClick={() => notifyRemove(txId)}>
+            <Icon className="fa fa-info-circle" />
           </ButtonWrapper>
         }
       </IconWrapper>

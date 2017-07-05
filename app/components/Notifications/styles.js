@@ -1,8 +1,11 @@
 import styled, { keyframes } from 'styled-components';
 
+import { curtainStickyWidth } from '../../variables';
+
 import {
   alertBg,
   alertColor,
+  Button,
 } from '../../utils/styleUtils';
 
 const noteIn = keyframes`
@@ -37,18 +40,19 @@ export const Wrapper = styled.div`
   align-items: center;
   height: 36px;
   width: 420px;
-  padding: 0 12px;
+  padding: 0 10px 4px 16px;
   color: ${(props) => alertColor(props.type)};
   ${(props) => props.isNotTable ?
     `border: none;
      margin: none;
-     background-color: none;
-    `
+     background-color: none;`
     :
     `border-radius: 0 0 8px 8px;
-     margin-left: 24px;
      background-color: ${alertBg(props.type, 'solid')};
-    `
+     margin-left: 24px;
+     @media (min-width: ${curtainStickyWidth}) {
+       margin-left: 124px;
+     }`
   };
 `;
 
@@ -76,6 +80,6 @@ export const Icon = styled.i`
   }
 `;
 
-export const ButtonWrapper = styled.button`
+export const ButtonWrapper = styled(Button)`
   background-color: none;
 `;

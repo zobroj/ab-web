@@ -28,13 +28,6 @@ const Tester = (props) => {
       >
         add temp
       </button>
-      {/* <button
-        style={{ ...styles, backgroundColor: 'red' }}
-        onClick={() => this.popNotification('xxxxxx')}
-      >
-        pop
-      </button> */}
-
       {/* only add this to container */}
       {notifications.length !== 0 && notifications.map(
         (item, i) => (

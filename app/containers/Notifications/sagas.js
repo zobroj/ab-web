@@ -1,6 +1,8 @@
+import React from 'react';
 import { put, takeEvery } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 import uuid from 'uuid/v4';
+import Info from '../../components/Notifications';
 import {
   NOTIFY_CREATE,
   NOTIFY_REMOVE,
@@ -28,7 +30,33 @@ const persist = {
   dismissable: false,
   date: new Date(),
   type: 'danger',
+  info: <Info />,
 };
+
+function* createTempNotification(txId) {
+  temp.txId = txId;
+  yield put(notifyAdd(temp));
+  // TODO don't call removeNotification if NOTIFY_REMOVE is already dispatched
+  // wait for NOTIFY_REMOVE to be dispatched by the user
+  // or call NOTIFY_REMOVE after timeout
+  yield delay(3000);
+  yield* removeNotification({ txId });
+}
+
+function* createPersistNotification(txId) {
+  persist.txId = txId;
+  yield put(notifyAdd(persist));
+}
+
+function* selectNotification(action) {
+  const txId = uuid();
+  if (action.notifyType === TEMP) {
+    yield* createTempNotification(txId);
+  } else {
+    // if persist
+    yield* createPersistNotification(txId);
+  }
+}
 
 function* removeNotification(action) {
   // trigger remove note animation
@@ -38,25 +66,8 @@ function* removeNotification(action) {
   yield put(notifyDelete(action.txId));
 }
 
-function* createNotification(action) {
-  const newUuid = uuid();
-  if (action.notifyType === TEMP) {
-    temp.txId = newUuid;
-    yield put(notifyAdd(temp));
-    // TODO don't call removeNotification if NOTIFY_REMOVE is already dispatched
-    // wait for NOTIFY_REMOVE to be dispatched by the user
-    // or call NOTIFY_REMOVE after timeout
-    yield delay(3000);
-    yield* removeNotification({ txId: newUuid });
-  } else {
-    // if persist
-    persist.txId = newUuid;
-    yield put(notifyAdd(persist));
-  }
-}
-
 export function* notificationsSaga() {
-  yield takeEvery(NOTIFY_CREATE, createNotification);
+  yield takeEvery(NOTIFY_CREATE, selectNotification);
   yield takeEvery(NOTIFY_REMOVE, removeNotification);
 }
 

@@ -13,6 +13,7 @@ import {
 import {
   alertBg,
   alertColor,
+  Button,
 } from '../../utils/styleUtils';
 
 // shadows
@@ -256,7 +257,7 @@ export const ButtonStyle = styled(SharedMiddle)`
   width: ${scaleButtonJoin(44)};
 `;
 
-export const ButtonWrapper = styled.button`
+export const ButtonWrapper = styled(Button)`
   position: absolute;
   margin-top: ${scaleButtonJoin(42)};
   margin-left: ${scaleButtonJoin(42)};
@@ -268,7 +269,6 @@ export const ButtonWrapper = styled.button`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
 
   color: #D5D5D5;
   font-weight: 400;
@@ -276,9 +276,6 @@ export const ButtonWrapper = styled.button`
     color: white;
     transform: scale(1.1, 1.1);
     ${''/* box-shadow: inset 0 1px 3px 0 rgba(0,0,0,0.50); */}
-  }
-  &:focus {
-    outline: none;
   }
   &:active {
     color: ${activeColor};

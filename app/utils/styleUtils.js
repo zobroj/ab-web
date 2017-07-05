@@ -1,3 +1,4 @@
+import styled from 'styled-components';
 import {
   activeColor,
   successBg,
@@ -38,3 +39,18 @@ export const alertColor = (type) => {
   if (type === 'danger') return dangerColor;
   return infoColor;
 };
+
+export const Button = styled.button`
+  padding: 0;
+  margin: 0;
+  border: none;
+  &:focus {
+    outline: none;
+  }
+  &:hover {
+    cursor: pointer;
+  }
+  &:disabled{
+    cursor: default;
+  }
+`;

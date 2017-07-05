@@ -1,4 +1,4 @@
-import { call, put, takeEvery } from 'redux-saga/effects';
+import { put, takeEvery } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 import uuid from 'uuid/v4';
 import {
@@ -34,7 +34,7 @@ function* removeNotification(action) {
   // trigger remove note animation
   yield put(notifyRemoving(action.txId));
   // remove element after animation finishes
-  yield call(delay, 400);
+  yield delay(400);
   yield put(notifyDelete(action.txId));
 }
 
@@ -43,7 +43,10 @@ function* createNotification(action) {
   if (action.notifyType === TEMP) {
     temp.txId = newUuid;
     yield put(notifyAdd(temp));
-    yield call(delay, 3000);
+    // TODO don't call removeNotification if NOTIFY_REMOVE is already dispatched
+    // wait for NOTIFY_REMOVE to be dispatched by the user
+    // or call NOTIFY_REMOVE after timeout
+    yield delay(3000);
     yield* removeNotification({ txId: newUuid });
   } else {
     // if persist

@@ -1,48 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Notifications from './Notification';
-import { TEMP, PERSIST } from '../../containers/Notifications/constants';
-
-const styles = {
-  position: 'absolute',
-  backgroundColor: 'green',
-  color: 'white',
-  marginTop: 100,
-  zIndex: 100,
-};
+import Notification from './Notification';
+import { notLoggedIn } from '../../containers/Notifications/constants';
 
 const Tester = (props) => {
-  const { notifications } = props;
-  return (
-    <div>
-      {/* testing related only */}
-      <button
-        style={{ ...styles, left: 120 }}
-        onClick={() => props.notifyCreate(PERSIST)}
-      >
-        add persist
-      </button>
-      <button
-        style={{ ...styles, left: 220 }}
-        onClick={() => props.notifyCreate(TEMP)}
-      >
-        add temp
-      </button>
-      {/* only add this to container */}
-      {notifications.length !== 0 && notifications.map(
-        (item, i) => (
-          <Notifications
-            key={i}
-            {...item}
-            {...props}
-          />
-        )
-      )}
-    </div>
-  );
+  const { notifications, loggedIn } = props;
+  if (loggedIn) {
+    return (
+      <div>
+        {notifications.length !== 0 &&
+          notifications.map(
+            (item, i) => <Notification key={i} {...item} {...props} />,
+          )
+        }
+      </div>
+    );
+  }
+  return <Notification {...notLoggedIn} {...props} />;
 };
 Tester.propTypes = {
-  notifyCreate: PropTypes.func,
+  loggedIn: PropTypes.bool,
   notifications: PropTypes.array,
 };
 

@@ -3,8 +3,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-import { notifyRemove, notifyCreate } from './actions';
+import { notifyRemove } from './actions';
 import { selectNotifications } from './selectors';
+import { makeSelectLoggedIn } from '../AccountProvider/selectors';
 
 import Notifications from '../../components/Notifications';
 
@@ -14,11 +15,11 @@ const NotificationsContainer = (props) => (
 
 const mapDispatchToProps = (dispatch) => ({
   notifyRemove: (txId) => dispatch(notifyRemove(txId)),
-  notifyCreate: (type) => dispatch(notifyCreate(type)),
 });
 
 const mapStateToProps = createStructuredSelector({
   notifications: selectNotifications(),
+  loggedIn: makeSelectLoggedIn(),
 });
 
 export default connect(

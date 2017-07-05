@@ -49,7 +49,7 @@ Notification.propTypes = {
   details: PropTypes.string,
   dismissable: PropTypes.bool,
   isNotTable: PropTypes.bool,
-  notifyRemove: PropTypes.func.isRequired,
+  notifyRemove: PropTypes.func,
   removing: PropTypes.bool,
   type: PropTypes.string,
   txId: PropTypes.string,

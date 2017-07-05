@@ -1,5 +1,54 @@
+import React from 'react';
+import Info from '../../components/Notifications';
+
 export const PERSIST = 'persist';
 export const TEMP = 'temp';
+
+export const notLoggedIn = {
+  txId: 'AUTH_NOT_LOGGED_IN',
+  notifyType: 'AUTH_NOT_LOGGED_IN',
+  category: 'Visitor Mode',
+  details: 'Please log in to join a game.',
+  removing: false,
+  dismissable: false,
+  date: new Date(),
+  type: 'info',
+  // info: <Info />,
+};
+
+export const loggedInSuccess = {
+  txId: 'AUTH_LOGGED_IN',
+  notifyType: 'AUTH_LOGGED_IN',
+  category: 'Accont Auth Success',
+  details: 'Good luck!',
+  removing: false,
+  dismissable: true,
+  date: new Date(),
+  type: 'success',
+  // info: <Info />,
+};
+
+export const temp = {
+  notifyType: 'FUNDS_TRANSFERRED_NTZ',
+  category: 'NTZ Wallet',
+  details: 'Sent 1,000 NTZ to 0x2381...3290',
+  removing: false,
+  dismissable: true,
+  date: new Date(),
+  type: 'success',
+};
+
+export const persist = {
+  notifyType: 'TABLE_JOINING',
+  category: 'Joining Table',
+  details: '0xdsaifoj...dskafj',
+  removing: false,
+  dismissable: false,
+  date: new Date(),
+  type: 'danger',
+  info: <Info />,
+};
+
 
 /*
 const mockNotifications = [

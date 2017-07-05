@@ -1,8 +1,7 @@
-import React from 'react';
 import { put, takeEvery } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 import uuid from 'uuid/v4';
-import Info from '../../components/Notifications';
+
 import {
   NOTIFY_CREATE,
   NOTIFY_REMOVE,
@@ -10,63 +9,57 @@ import {
   notifyDelete,
   notifyRemoving,
 } from './actions';
-import { TEMP } from './constants';
 
-const temp = {
-  notifyType: 'FUNDS_TRANSFERRED_NTZ',
-  category: 'NTZ Wallet',
-  details: 'Sent 1,000 NTZ to 0x2381...3290',
-  removing: false,
-  dismissable: true,
-  date: new Date(),
-  type: 'success',
-};
+import { SET_AUTH } from '../AccountProvider/actions';
 
-const persist = {
-  notifyType: 'TABLE_JOINING',
-  category: 'Joining Table',
-  details: '0xdsaifoj...dskafj',
-  removing: false,
-  dismissable: false,
-  date: new Date(),
-  type: 'danger',
-  info: <Info />,
-};
+import {
+  TEMP,
+  loggedInSuccess,
+  temp,
+  persist,
+} from './constants';
 
-function* createTempNotification(txId) {
-  temp.txId = txId;
-  yield put(notifyAdd(temp));
+function* createTempNotification(note) {
+  yield put(notifyAdd(note));
   // TODO don't call removeNotification if NOTIFY_REMOVE is already dispatched
   // wait for NOTIFY_REMOVE to be dispatched by the user
   // or call NOTIFY_REMOVE after timeout
   yield delay(3000);
-  yield* removeNotification({ txId });
+  yield* removeNotification({ txId: note.txId });
 }
 
-function* createPersistNotification(txId) {
-  persist.txId = txId;
-  yield put(notifyAdd(persist));
+function* createPersistNotification(note) {
+  yield put(notifyAdd(note));
 }
 
 function* selectNotification(action) {
-  const txId = uuid();
   if (action.notifyType === TEMP) {
-    yield* createTempNotification(txId);
+    temp.txId = uuid();
+    yield* createTempNotification(temp);
   } else {
+    persist.txId = uuid();
     // if persist
-    yield* createPersistNotification(txId);
+    yield* createPersistNotification(persist);
   }
 }
 
-function* removeNotification(action) {
+function* removeNotification({ txId }) {
   // trigger remove note animation
-  yield put(notifyRemoving(action.txId));
+  yield put(notifyRemoving(txId));
   // remove element after animation finishes
   yield delay(400);
-  yield put(notifyDelete(action.txId));
+  yield put(notifyDelete(txId));
+}
+
+function* authNotification({ newAuthState }) {
+  const { loggedIn } = newAuthState;
+  if (loggedIn) {
+    yield* createTempNotification(loggedInSuccess);
+  }
 }
 
 export function* notificationsSaga() {
+  yield takeEvery(SET_AUTH, authNotification);
   yield takeEvery(NOTIFY_CREATE, selectNotification);
   yield takeEvery(NOTIFY_REMOVE, removeNotification);
 }

@@ -12,6 +12,17 @@ export const loggedInSuccess = {
   type: 'success',
 };
 
+export const tableJoining = {
+  txId: null,
+  notifyType: 'TABLE_JOINING',
+  category: 'Joining Table',
+  details: null, // tableId
+  removing: false,
+  dismissable: false,
+  date: new Date(),
+  type: 'warning',
+};
+
 export const temp = {
   notifyType: 'FUNDS_TRANSFERRED_NTZ',
   category: 'NTZ Wallet',

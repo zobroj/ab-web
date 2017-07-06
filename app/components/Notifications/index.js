@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Notification from './Notification';
 import { Link } from './styles';
 
-const notLoggedIn = {
+export const notLoggedIn = {
   txId: 'AUTH_NOT_LOGGED_IN',
   notifyType: 'AUTH_NOT_LOGGED_IN',
   category: 'Visitor Mode',
@@ -16,6 +16,7 @@ const notLoggedIn = {
 
 const Tester = (props) => {
   const { notifications, loggedIn } = props;
+  // testing for loggedIn here because the Notifications saga does not pickup the dispatch SET_AUTH after a browser refresh
   if (loggedIn) {
     return (
       <div>

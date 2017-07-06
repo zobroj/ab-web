@@ -10,11 +10,15 @@ import {
   notifyRemoving,
 } from './actions';
 
-import { SET_AUTH } from '../AccountProvider/actions';
+import {
+  SET_AUTH,
+  CONTRACT_TX_SUCCESS,
+} from '../AccountProvider/actions';
 
 import {
   TEMP,
   loggedInSuccess,
+  tableJoining,
   temp,
   persist,
 } from './constants';
@@ -58,8 +62,19 @@ function* authNotification({ newAuthState }) {
   }
 }
 
+function* tableJoin(action) {
+  const { address, methodName, txHash } = action.payload;
+  if (methodName === 'join') {
+    const note = tableJoining;
+    note.txId = txHash; // transactionId
+    note.details = address; // tableId
+    yield* createPersistNotification(note);
+  }
+}
+
 export function* notificationsSaga() {
   yield takeEvery(SET_AUTH, authNotification);
+  yield takeEvery(CONTRACT_TX_SUCCESS, tableJoin);
   yield takeEvery(NOTIFY_CREATE, selectNotification);
   yield takeEvery(NOTIFY_REMOVE, removeNotification);
 }

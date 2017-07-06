@@ -23,7 +23,7 @@ import {
   TEMP,
   loggedInSuccess,
   tableJoining,
-  // tableJoined,
+  tableJoined,
   temp,
   persist,
 } from './constants';
@@ -34,7 +34,7 @@ function* createTempNotification(note) {
   // wait for NOTIFY_REMOVE to be dispatched by the user
   // or call NOTIFY_REMOVE after timeout
   yield delay(3000);
-  yield* removeNotification({ txId: note.txId });
+  yield* removeNotification(note.txId);
 }
 
 function* createPersistNotification(note) {
@@ -52,7 +52,7 @@ function* selectNotification(action) {
   }
 }
 
-function* removeNotification({ txId }) {
+function* removeNotification(txId) {
   // trigger remove note animation
   yield put(notifyRemoving(txId));
   // remove element after animation finishes
@@ -76,22 +76,17 @@ function* txSuccess(action) {
     note.details = address; // tableId
     yield* createPersistNotification(note);
 
+    // end joinTable process
     const chan = yield call(tableJoinEvent, address);
 
     try {
       const event = yield take(chan);
-      console.log('JOIN EVENT', event);
-      // end joinTable process
-      /*
-      if (methodName === '???') {
-        // remove old peristant notification
-        yield* removeNotification(txHash);
-        // create new temp notification of join table success
-        const note = tableJoined;
-        note.details = address; // tableId
-        yield* createTempNotification(note);
-      }
-      */
+      // create new temp notification of join table success
+      const joinedNote = tableJoined;
+      joinedNote.details = event.address; // tableId
+      yield* createTempNotification(joinedNote);
+      // then delete previous
+      yield* removeNotification(event.transactionHash);
     } finally {
       chan.close();
     }
@@ -126,4 +121,3 @@ const tableJoinEvent = (tableAddr) => eventChannel((emitter) => {
     events.stopWatching(stopCb);
   };
 });
-

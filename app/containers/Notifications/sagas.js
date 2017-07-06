@@ -78,24 +78,22 @@ function* txSuccess(action) {
 
     const chan = yield call(tableJoinEvent, address);
 
-    while (true) { // eslint-disable-line no-constant-condition
-      try {
-        const event = yield take(chan);
-        console.log('JOIN EVENT', event);
-        // end joinTable process
-        /*
-        if (methodName === '???') {
-          // remove old peristant notification
-          yield* removeNotification(txHash);
-          // create new temp notification of join table success
-          const note = tableJoined;
-          note.details = address; // tableId
-          yield* createTempNotification(note);
-        }
-        */
-      } finally {
-        chan.close();
+    try {
+      const event = yield take(chan);
+      console.log('JOIN EVENT', event);
+      // end joinTable process
+      /*
+      if (methodName === '???') {
+        // remove old peristant notification
+        yield* removeNotification(txHash);
+        // create new temp notification of join table success
+        const note = tableJoined;
+        note.details = address; // tableId
+        yield* createTempNotification(note);
       }
+      */
+    } finally {
+      chan.close();
     }
   }
 }

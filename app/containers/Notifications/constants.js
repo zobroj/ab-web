@@ -23,6 +23,17 @@ export const tableJoining = {
   type: 'warning',
 };
 
+export const tableJoined = {
+  txId: 'TABLE_JOINED',
+  notifyType: 'TABLE_JOINED',
+  category: 'Joined Table',
+  details: null, // tableId
+  removing: false,
+  dismissable: true,
+  date: new Date(),
+  type: 'success',
+};
+
 export const temp = {
   notifyType: 'FUNDS_TRANSFERRED_NTZ',
   category: 'NTZ Wallet',

@@ -19,6 +19,7 @@ import {
   TEMP,
   loggedInSuccess,
   tableJoining,
+  // tableJoined,
   temp,
   persist,
 } from './constants';
@@ -62,19 +63,31 @@ function* authNotification({ newAuthState }) {
   }
 }
 
-function* tableJoin(action) {
+function* txSuccess(action) {
   const { address, methodName, txHash } = action.payload;
+  // begin joinTable process
   if (methodName === 'join') {
     const note = tableJoining;
     note.txId = txHash; // transactionId
     note.details = address; // tableId
     yield* createPersistNotification(note);
   }
+  // end joinTable process
+  /*
+  if (methodName === '???') {
+    // remove old peristant notification
+    yield* removeNotification(txHash);
+    // create new temp notification of join table success
+    const note = tableJoined;
+    note.details = address; // tableId
+    yield* createTempNotification(note);
+  }
+  */
 }
 
 export function* notificationsSaga() {
   yield takeEvery(SET_AUTH, authNotification);
-  yield takeEvery(CONTRACT_TX_SUCCESS, tableJoin);
+  yield takeEvery(CONTRACT_TX_SUCCESS, txSuccess);
   yield takeEvery(NOTIFY_CREATE, selectNotification);
   yield takeEvery(NOTIFY_REMOVE, removeNotification);
 }

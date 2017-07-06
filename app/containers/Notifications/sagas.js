@@ -1,6 +1,8 @@
-import { put, takeEvery } from 'redux-saga/effects';
-import { delay } from 'redux-saga';
+import { put, takeEvery, call, take } from 'redux-saga/effects';
+import { delay, eventChannel, END } from 'redux-saga';
 import uuid from 'uuid/v4';
+
+import { getWeb3 } from '../AccountProvider/utils';
 
 import {
   NOTIFY_CREATE,
@@ -14,6 +16,8 @@ import {
   SET_AUTH,
   CONTRACT_TX_SUCCESS,
 } from '../AccountProvider/actions';
+
+import { ABI_TABLE } from '../../app.config';
 
 import {
   TEMP,
@@ -71,6 +75,17 @@ function* txSuccess(action) {
     note.txId = txHash; // transactionId
     note.details = address; // tableId
     yield* createPersistNotification(note);
+
+    const chan = yield call(tableJoinEvent, address);
+
+    while (true) { // eslint-disable-line no-constant-condition
+      try {
+        const event = yield take(chan);
+        console.log('JOIN EVENT', event);
+      } finally {
+        chan.close();
+      }
+    }
   }
   // end joinTable process
   /*
@@ -85,9 +100,17 @@ function* txSuccess(action) {
   */
 }
 
+// function* tableJoined(action) {
+//   const { address, methodName } = action.payload;
+//   if (methodName === 'join') {
+
+//   }
+// }
+
 export function* notificationsSaga() {
   yield takeEvery(SET_AUTH, authNotification);
   yield takeEvery(CONTRACT_TX_SUCCESS, txSuccess);
+  // yield takeEvery(CONTRACT_TX_SUCCESS, tableJoined);
   yield takeEvery(NOTIFY_CREATE, selectNotification);
   yield takeEvery(NOTIFY_REMOVE, removeNotification);
 }
@@ -95,3 +118,22 @@ export function* notificationsSaga() {
 export default [
   notificationsSaga,
 ];
+
+const tableJoinEvent = (tableAddr) => eventChannel((emitter) => {
+  const web3 = getWeb3();
+  const tableContract = web3.eth.contract(ABI_TABLE).at(tableAddr);
+  const events = tableContract.Join({ fromBlock: 'latest' });
+  const stopCb = () => null; // prevents web3 error about wrong JSON rpc response
+  events.watch((error, results) => {
+    if (error) {
+      emitter(END);
+      events.stopWatching(stopCb);
+      return;
+    }
+    emitter(results);
+  });
+  return () => {
+    events.stopWatching(stopCb);
+  };
+});
+

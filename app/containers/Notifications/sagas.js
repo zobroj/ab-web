@@ -82,35 +82,27 @@ function* txSuccess(action) {
       try {
         const event = yield take(chan);
         console.log('JOIN EVENT', event);
+        // end joinTable process
+        /*
+        if (methodName === '???') {
+          // remove old peristant notification
+          yield* removeNotification(txHash);
+          // create new temp notification of join table success
+          const note = tableJoined;
+          note.details = address; // tableId
+          yield* createTempNotification(note);
+        }
+        */
       } finally {
         chan.close();
       }
     }
   }
-  // end joinTable process
-  /*
-  if (methodName === '???') {
-    // remove old peristant notification
-    yield* removeNotification(txHash);
-    // create new temp notification of join table success
-    const note = tableJoined;
-    note.details = address; // tableId
-    yield* createTempNotification(note);
-  }
-  */
 }
-
-// function* tableJoined(action) {
-//   const { address, methodName } = action.payload;
-//   if (methodName === 'join') {
-
-//   }
-// }
 
 export function* notificationsSaga() {
   yield takeEvery(SET_AUTH, authNotification);
   yield takeEvery(CONTRACT_TX_SUCCESS, txSuccess);
-  // yield takeEvery(CONTRACT_TX_SUCCESS, tableJoined);
   yield takeEvery(NOTIFY_CREATE, selectNotification);
   yield takeEvery(NOTIFY_REMOVE, removeNotification);
 }

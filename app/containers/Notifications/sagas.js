@@ -23,7 +23,7 @@ import {
   TEMP,
   loggedInSuccess,
   tableJoining,
-  // tableJoined,
+  tableJoined,
   temp,
   persist,
 } from './constants';
@@ -78,21 +78,19 @@ function* txSuccess(action) {
 
     // end joinTable process
 
-    yield call(waitForTx, txHash);
-
-    // const chan = yield call(tableJoinEvent, address);
-
-    // try {
-    //   const event = yield take(chan);
-    //   // create new temp notification of join table success
-    //   const joinedNote = tableJoined;
-    //   joinedNote.details = event.address; // tableId
-    //   yield* createTempNotification(joinedNote);
-    //   // then delete previous
-    //   yield* removeNotification(event.transactionHash);
-    // } finally {
-    //   chan.close();
-    // }
+    try {
+      const web3 = yield call(getWeb3);
+      yield call(waitForTx, web3, txHash);
+      // create new temp notification of join table success
+      const joinedNote = tableJoined;
+      joinedNote.details = event.address; // tableId
+      yield* createTempNotification(joinedNote);
+      // then delete previous
+      yield* removeNotification(event.transactionHash);
+    } catch (err) {
+      // Notify about failed joining?
+      console.error(err); // eslint-disable-line no-console
+    }
   }
 }
 
@@ -107,33 +105,37 @@ export default [
   notificationsSaga,
 ];
 
-function waitForTx(txHash) {
-  console.log('waitForTx', txHash);
+function waitForTx(web3, txHash) {
   return new Promise((resolve, reject) => {
-    const web3 = getWeb3();
     const filter = web3.eth.filter('latest');
-    filter.watch((err, blockHash) => {
-      if (err) {
-        reject(err);
-        filter.stopWatching(() => null);
-      }
-
-      web3.eth.getBlock(blockHash, true, (blockErr, block) => {
-        if (!blockErr) {
-          const hasTx = block.transactions.some((tx) => tx.hash === txHash);
-
-          if (hasTx) {
-            // web3.eth.getTransactionReceipt(txHash, (receipErr, receipt) => {
-            //   if (receipt && receipt.transactionHash === txHash) {
-
-            //   }
-            // });
-            console.log('bingo!');
-            resolve(txHash);
+    web3.eth.getTransaction(txHash, (txError, transaction) => {
+      if (txError) {
+        reject(txError);
+      } else {
+        filter.watch((err, blockHash) => {
+          if (err) {
+            reject(err);
             filter.stopWatching(() => null);
           }
-        }
-      });
+
+          web3.eth.getBlock(blockHash, true, (blockErr, block) => {
+            if (!blockErr) {
+              const hasTx = block.transactions.some((tx) => tx.hash === txHash);
+
+              if (hasTx) {
+                web3.eth.getTransactionReceipt(txHash, (receipErr, receipt) => {
+                  if (receipt && receipt.gasUsed >= transaction.gas) {
+                    return reject('Ran out of gas, tx likely failed');
+                  }
+
+                  filter.stopWatching(() => null);
+                  return resolve(txHash);
+                });
+              }
+            }
+          });
+        });
+      }
     });
   });
 }

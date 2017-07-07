@@ -1,5 +1,5 @@
-import { put, takeEvery, call, take } from 'redux-saga/effects';
-import { delay, eventChannel, END } from 'redux-saga';
+import { put, takeEvery, call } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
 import uuid from 'uuid/v4';
 
 import { getWeb3 } from '../AccountProvider/utils';
@@ -17,13 +17,13 @@ import {
   CONTRACT_TX_SUCCESS,
 } from '../AccountProvider/actions';
 
-import { ABI_TABLE } from '../../app.config';
+// import { ABI_TABLE } from '../../app.config';
 
 import {
   TEMP,
   loggedInSuccess,
   tableJoining,
-  tableJoined,
+  // tableJoined,
   temp,
   persist,
 } from './constants';
@@ -77,19 +77,22 @@ function* txSuccess(action) {
     yield* createPersistNotification(note);
 
     // end joinTable process
-    const chan = yield call(tableJoinEvent, address);
 
-    try {
-      const event = yield take(chan);
-      // create new temp notification of join table success
-      const joinedNote = tableJoined;
-      joinedNote.details = event.address; // tableId
-      yield* createTempNotification(joinedNote);
-      // then delete previous
-      yield* removeNotification(event.transactionHash);
-    } finally {
-      chan.close();
-    }
+    yield call(waitForTx, txHash);
+
+    // const chan = yield call(tableJoinEvent, address);
+
+    // try {
+    //   const event = yield take(chan);
+    //   // create new temp notification of join table success
+    //   const joinedNote = tableJoined;
+    //   joinedNote.details = event.address; // tableId
+    //   yield* createTempNotification(joinedNote);
+    //   // then delete previous
+    //   yield* removeNotification(event.transactionHash);
+    // } finally {
+    //   chan.close();
+    // }
   }
 }
 
@@ -104,20 +107,33 @@ export default [
   notificationsSaga,
 ];
 
-const tableJoinEvent = (tableAddr) => eventChannel((emitter) => {
-  const web3 = getWeb3();
-  const tableContract = web3.eth.contract(ABI_TABLE).at(tableAddr);
-  const events = tableContract.Join({ fromBlock: 'latest' });
-  const stopCb = () => null; // prevents web3 error about wrong JSON rpc response
-  events.watch((error, results) => {
-    if (error) {
-      emitter(END);
-      events.stopWatching(stopCb);
-      return;
-    }
-    emitter(results);
+function waitForTx(txHash) {
+  console.log('waitForTx', txHash);
+  return new Promise((resolve, reject) => {
+    const web3 = getWeb3();
+    const filter = web3.eth.filter('latest');
+    filter.watch((err, blockHash) => {
+      if (err) {
+        reject(err);
+        filter.stopWatching(() => null);
+      }
+
+      web3.eth.getBlock(blockHash, true, (blockErr, block) => {
+        if (!blockErr) {
+          const hasTx = block.transactions.some((tx) => tx.hash === txHash);
+
+          if (hasTx) {
+            // web3.eth.getTransactionReceipt(txHash, (receipErr, receipt) => {
+            //   if (receipt && receipt.transactionHash === txHash) {
+
+            //   }
+            // });
+            console.log('bingo!');
+            resolve(txHash);
+            filter.stopWatching(() => null);
+          }
+        }
+      });
+    });
   });
-  return () => {
-    events.stopWatching(stopCb);
-  };
-});
+}

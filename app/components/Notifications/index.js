@@ -16,8 +16,9 @@ const notLoggedIn = {
 };
 
 const Tester = (props) => {
-  const { notifications, loggedIn } = props;
-  if (loggedIn) {
+  const { pathname, notifications, loggedIn } = props;
+  const isGenerate = pathname.indexOf('generate') === 1;
+  if (loggedIn || isGenerate) {
     return (
       <div>
         {notifications.length !== 0 &&
@@ -31,6 +32,7 @@ const Tester = (props) => {
   return <Center {...notLoggedIn} {...props} />;
 };
 Tester.propTypes = {
+  pathname: PropTypes.string,
   loggedIn: PropTypes.bool,
   notifications: PropTypes.array,
 };

@@ -1,10 +1,8 @@
-/**
- * Created by helge on 06.10.16.
- */
-
 import React from 'react';
+import PropTypes from 'prop-types';
 import Button from 'components/Button';
 import Container from 'components/Container';
+import WithLoading from 'components/WithLoading';
 import { TableStriped } from 'components/List';
 import { createStructuredSelector } from 'reselect';
 import LobbyItem from '../LobbyItem';
@@ -12,7 +10,6 @@ import LobbyMessage from '../LobbyMessage';
 import { tableReceived, lineupReceived, updateReceived } from '../Table/actions';
 import { makeSelectLobby } from './selectors';
 import web3Connect from '../AccountProvider/web3Connect';
-import WithLoading from '../../components/WithLoading';
 import { fetchTableState, fetchTables } from '../../services/tableService';
 
 import { ABI_TABLE } from '../../app.config';
@@ -107,6 +104,15 @@ class LobbyComponent extends React.PureComponent { // eslint-disable-line
             }}
           />
         </Button>
+
+        <iframe
+          title="discordapp"
+          src="https://discordapp.com/widget?id=303824401458135041&theme=dark"
+          width="480"
+          height="500"
+          allowTransparency="true"
+          frameBorder="0"
+        />
       </Container>
     );
   }
@@ -125,11 +131,11 @@ const mapStateToProps = createStructuredSelector({
 });
 
 LobbyComponent.propTypes = {
-  lobby: React.PropTypes.array,
-  web3Redux: React.PropTypes.any,
-  tableReceived: React.PropTypes.func,
-  updateReceived: React.PropTypes.func,
-  lineupReceived: React.PropTypes.func,
+  lobby: PropTypes.array,
+  web3Redux: PropTypes.any,
+  tableReceived: PropTypes.func,
+  updateReceived: PropTypes.func,
+  lineupReceived: PropTypes.func,
 };
 
 export default web3Connect(mapStateToProps, mapDispatchToProps)(LobbyComponent);

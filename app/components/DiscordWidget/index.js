@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default () => (
+const DiscordWidget = () => (
   <iframe
     title="discordapp"
     src="https://discordapp.com/widget?id=303824401458135041&theme=dark"
@@ -10,3 +10,5 @@ export default () => (
     frameBorder="0"
   />
 );
+
+export default DiscordWidget;

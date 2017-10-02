@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Button from 'components/Button';
 import Container from 'components/Container';
+import DiscordWidget from 'components/DiscordWidget';
 import WithLoading from 'components/WithLoading';
 import { TableStriped } from 'components/List';
 import { createStructuredSelector } from 'reselect';
@@ -13,6 +14,8 @@ import web3Connect from '../AccountProvider/web3Connect';
 import { fetchTableState, fetchTables } from '../../services/tableService';
 
 import { ABI_TABLE } from '../../app.config';
+
+import { Section } from './styles';
 
 async function getTableData(table, action) {
   const [lineup, sb] = await Promise.all([
@@ -93,7 +96,7 @@ class LobbyComponent extends React.PureComponent { // eslint-disable-line
           isLoading={lobby.length === 0}
         />
 
-        <Button onClick={this.handleRefresh} size="medium">
+        <Button style={{ width: '100%' }} onClick={this.handleRefresh} size="medium">
           Refresh
           <WithLoading
             isLoading={refreshing}
@@ -105,14 +108,11 @@ class LobbyComponent extends React.PureComponent { // eslint-disable-line
           />
         </Button>
 
-        <iframe
-          title="discordapp"
-          src="https://discordapp.com/widget?id=303824401458135041&theme=dark"
-          width="480"
-          height="500"
-          allowTransparency="true"
-          frameBorder="0"
-        />
+
+        <Section>
+          <DiscordWidget />
+        </Section>
+
       </Container>
     );
   }

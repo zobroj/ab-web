@@ -92,8 +92,12 @@ class Lobby extends React.PureComponent {
           isLoading={lobby.length === 0}
         />
 
-        <Button style={{ width: '100%' }} onClick={this.handleRefresh} size="medium">
-          Refresh
+        <Button
+          style={{ width: '100%' }}
+          onClick={this.handleRefresh}
+          size="medium"
+          disabled={refreshing}
+        >
           <WithLoading
             isLoading={refreshing}
             loadingSize="14px"
@@ -101,7 +105,9 @@ class Lobby extends React.PureComponent {
             styles={{
               inner: { marginLeft: 5 },
             }}
-          />
+          >
+            Refresh
+          </WithLoading>
         </Button>
 
 

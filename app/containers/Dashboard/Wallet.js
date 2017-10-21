@@ -8,7 +8,7 @@ import { ETH_DECIMALS, NTZ_DECIMALS } from '../../utils/amountFormatter';
 import { notifyCreate } from '../Notifications/actions';
 import { TRANSFER_NTZ, TRANSFER_ETH } from '../Notifications/constants';
 
-import { modalDismiss } from '../App/actions';
+import { modalAdd, modalDismiss } from '../App/actions';
 import makeSelectAccountData from '../AccountProvider/selectors';
 import messages from './messages';
 import { getAmountUnit } from './selectors';
@@ -123,6 +123,8 @@ class Wallet extends React.Component {
           estimateETHTransfer: this.estimateETHTransfer,
           fishWarn: this.fishWarn,
           amountUnit,
+          modalAdd: this.props.modalAdd,
+          modalDismiss: this.props.modalDismiss,
         }}
       />
     );
@@ -130,14 +132,16 @@ class Wallet extends React.Component {
 }
 Wallet.propTypes = {
   account: PropTypes.object,
-  modalDismiss: PropTypes.func,
   web3Redux: PropTypes.any,
   notifyCreate: PropTypes.func,
   amountUnit: PropTypes.string,
+  modalAdd: PropTypes.func.isRequired,
+  modalDismiss: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
   notifyCreate: (type, props) => dispatch(notifyCreate(type, props)),
+  modalAdd: (payload) => dispatch(modalAdd(payload)),
   modalDismiss,
 });
 
@@ -150,4 +154,3 @@ export default web3Connect(
   mapStateToProps,
   mapDispatchToProps,
 )(Wallet);
-

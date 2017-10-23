@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { createStructuredSelector } from 'reselect';
 import BigNumber from 'bignumber.js';
 
+import { modalAdd, modalDismiss } from '../App/actions';
 import web3Connect from '../AccountProvider/web3Connect';
 import { ETH_DECIMALS, NTZ_DECIMALS } from '../../utils/amountFormatter';
 import { notifyCreate } from '../Notifications/actions';
@@ -138,10 +139,6 @@ Wallet.propTypes = {
   modalDismiss: PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  notifyCreate: (type, props) => dispatch(notifyCreate(type, props)),
-});
-
 const mapStateToProps = createStructuredSelector({
   account: makeSelectAccountData(),
   amountUnit: getAmountUnit(),
@@ -149,5 +146,9 @@ const mapStateToProps = createStructuredSelector({
 
 export default web3Connect(
   mapStateToProps,
-  mapDispatchToProps,
+  () => ({
+    notifyCreate,
+    modalAdd,
+    modalDismiss,
+  }),
 )(Wallet);

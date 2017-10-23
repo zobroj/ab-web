@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { createStructuredSelector } from 'reselect';
 import { FormattedMessage } from 'react-intl';
 
-import { modalAdd, modalDismiss } from '../App/actions';
 import web3Connect from '../AccountProvider/web3Connect';
 import makeSelectAccountData from '../AccountProvider/selectors';
 import {
@@ -120,14 +119,6 @@ DashboardRoot.propTypes = {
   web3Redux: PropTypes.any,
 };
 
-function mapDispatchToProps() {
-  return {
-    setActiveTab,
-    modalDismiss,
-    modalAdd,
-  };
-}
-
 const mapStateToProps = createStructuredSelector({
   activeTab: getActiveTab(),
   account: makeSelectAccountData(),
@@ -135,5 +126,5 @@ const mapStateToProps = createStructuredSelector({
 
 export default web3Connect(
   mapStateToProps,
-  mapDispatchToProps,
+  () => ({ setActiveTab }),
 )(DashboardRoot);

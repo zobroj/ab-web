@@ -140,7 +140,7 @@ class Exchange extends React.Component {
 Exchange.propTypes = {
   amountUnit: PropTypes.oneOf([ETH, NTZ]),
   account: PropTypes.object,
-  modalDismiss: PropTypes.func,
+  modalDismiss: PropTypes.func.isRequired,
   web3Redux: PropTypes.any,
 };
 

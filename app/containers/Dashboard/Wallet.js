@@ -8,7 +8,6 @@ import { ETH_DECIMALS, NTZ_DECIMALS } from '../../utils/amountFormatter';
 import { notifyCreate } from '../Notifications/actions';
 import { TRANSFER_NTZ, TRANSFER_ETH } from '../Notifications/constants';
 
-import { modalAdd, modalDismiss } from '../App/actions';
 import makeSelectAccountData from '../AccountProvider/selectors';
 import messages from './messages';
 import { getAmountUnit } from './selectors';
@@ -141,8 +140,6 @@ Wallet.propTypes = {
 
 const mapDispatchToProps = (dispatch) => ({
   notifyCreate: (type, props) => dispatch(notifyCreate(type, props)),
-  modalAdd: (payload) => dispatch(modalAdd(payload)),
-  modalDismiss,
 });
 
 const mapStateToProps = createStructuredSelector({

@@ -10,7 +10,6 @@ import {
 } from '../../utils/amountFormatter';
 import { notifyCreate } from '../Notifications/actions';
 
-import { modalDismiss } from '../App/actions';
 import makeSelectAccountData, {
   makeSignerAddrSelector,
   makeSelectPrivKey,
@@ -128,6 +127,8 @@ class Invest extends React.Component {
           estimatePowerUp: this.estimatePowerUp,
           handlePowerDown: this.handlePowerDown,
           estimatePowerDown: this.estimatePowerDown,
+          modalAdd: this.props.modalAdd,
+          modalDismiss: this.props.modalDismiss,
         }}
       />
     );
@@ -135,7 +136,8 @@ class Invest extends React.Component {
 }
 Invest.propTypes = {
   account: PropTypes.object,
-  modalDismiss: PropTypes.func,
+  modalAdd: PropTypes.func.isRequired,
+  modalDismiss: PropTypes.func.isRequired,
   web3Redux: PropTypes.any,
   notifyCreate: PropTypes.func,
   investType: PropTypes.oneOf([POWERUP, POWERDOWN]).isRequired,
@@ -147,7 +149,6 @@ const mapDispatchToProps = (dispatch) => ({
   setActiveTab,
   setAmountUnit,
   notifyCreate: (type, props) => dispatch(notifyCreate(type, props)),
-  modalDismiss,
 });
 
 const mapStateToProps = createStructuredSelector({
